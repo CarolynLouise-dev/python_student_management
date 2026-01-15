@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<title>Student Management</title>
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+<div class="container">
+  <h1>🎓 Quản lý sinh viên</h1>
+
+  <!-- FORM -->
+  <form id="studentForm">
+    <input type="text" id="mssv" placeholder="MSSV *" required />
+    <input type="text" id="ho" placeholder="Họ" />
+    <input type="text" id="ten" placeholder="Tên" />
+    <input type="email" id="email" placeholder="Email" />
+    <input type="date" id="ngay_sinh" />
+    <input type="text" id="que_quan" placeholder="Quê quán" />
+    <input type="number" step="0.1" id="diem_toan" placeholder="Điểm Toán" />
+    <input type="number" step="0.1" id="diem_van" placeholder="Điểm Văn" />
+    <input type="number" step="0.1" id="diem_anh" placeholder="Điểm Anh" />
+    <button type="submit">💾 Lưu sinh viên</button>
+    <button type="button" onclick="resetForm()">❌ Hủy</button>
+  </form>
+
+  <!-- SEARCH -->
+<input
+  type="text"
+  id="searchInput"
+  placeholder="🔍 Tìm theo MSSV hoặc tên..."
+/>
+
+
+
+  <!-- TABLE -->
+  <table>
+    <thead>
+      <tr>
+        <th>MSSV</th>
+        <th>Họ</th>
+        <th>Tên</th>
+        <th>Email</th>
+        <th>Ngày sinh</th>
+        <th>Quê quán</th>
+        <th>Toán</th>
+        <th>Văn</th>
+        <th>Anh</th>
+        <th>GPA</th>
+        <th>Học lực</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody id="studentTable"></tbody>
+  </table>
+  <div id="pagination" style="margin-top:15px; text-align:center;"></div>
+
+</div>
+<script type="text/javascript" src="/js/main.js"></script>
+</body>
+</html>

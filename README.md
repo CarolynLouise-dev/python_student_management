@@ -1,0 +1,147 @@
+Below are the suggested edits to improve the `README.md` file for better clarity and structure:
+
+```markdown
+# 🎓 Student Management System
+```
+
+```markdown
+## 📌 Features
+
+- ✅ Add / Edit / Delete students
+- ✅ Display the student list
+- ✅ JSON API support
+- ✅ Allow missing student data
+- ✅ Automatically generate 100 sample students
+- ✅ Frontend interface to call APIs
+- ✅ Preprocess & analyze data using Pandas
+```
+
+```markdown
+## 🧱 Tech Stack
+
+### Backend
+- Python 3.10+
+- FastAPI
+- Pydantic
+- JSON Storage
+- Pandas
+
+### Frontend
+- HTML5
+- CSS3
+- JavaScript (Fetch API)
+```
+
+```markdown
+## 📂 Project Structure
+
+```
+student-management/
+├── backend/
+│   ├── main.py
+│   ├── crud.py
+│   ├── models.py
+│   └── data/
+│       └── students.json
+│
+├── frontend-html/
+│   ├── index.html
+│   ├── css/
+│   │   └── style.css
+│   └── js/
+│       └── main.js
+│
+├── docs/
+│   ├── report.docx
+│   └── slide.pptx
+│
+└── README.md
+```
+```
+
+```markdown
+## 🧾 Student Model
+
+```json
+{
+  "mssv": "SV001",
+  "ho": "Nguyen",
+  "ten": "Van A",
+  "email": "sva@gmail.com",
+  "ngay_sinh": "2003-01-01",
+  "que_quan": "Hà Nội",
+  "diem_toan": 8.5,
+  "diem_van": 7.5,
+  "diem_anh": 9.0
+}
+```
+
+- All fields (except `mssv`) can be left empty.
+```
+
+### Edit 6: Improve the "Getting Started" section formatting
+```markdown
+## 🚀 Getting Started
+
+### 1️⃣ Install dependencies
+```bash
+pip install fastapi uvicorn pydantic pandas
+```
+
+### 2️⃣ Run Backend
+```bash
+cd backend
+uvicorn main:app --reload
+```
+
+### 3️⃣ Run Frontend
+- Open the file `frontend-html/index.html`
+- Or use the Live Server extension in VS Code
+```
+
+### Edit 7: Improve the "API Endpoints" section formatting
+```markdown
+## 🔌 API Endpoints
+
+| Method | Endpoint           | Description          |
+|--------|--------------------|----------------------|
+| GET    | /students          | Get all students     |
+| GET    | /students/{mssv}   | Get student by MSSV  |
+| POST   | /students          | Create new student   |
+| PUT    | /students/{mssv}   | Update student       |
+| DELETE | /students/{mssv}   | Delete student       |
+```
+
+### Edit 8: Improve the "Data Initialization" section formatting
+```markdown
+## 🧠 Data Initialization
+
+When the server starts:
+- If `students.json` is empty or does not exist:
+  - 👉 Automatically generate 100 sample students
+- Ensure data is only generated once
+```
+
+### Edit 9: Improve the "Data Processing & Analysis" section formatting
+```markdown
+## 📊 Data Processing & Analysis
+
+Using Pandas to:
+- Clean missing data
+- Compare:
+  - Math scores vs English scores
+  - English scores by hometown
+- Support analysis & reporting
+```
+
+### Edit 10: Improve the "Notes" section formatting
+```markdown
+## 📌 Notes
+
+- This project is for educational purposes
+- Data is illustrative only
+- Possible extensions:
+  - ReactJS Frontend
+  - Desktop Application
+  - Database (MySQL / PostgreSQL)
+```
