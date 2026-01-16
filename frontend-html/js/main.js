@@ -19,7 +19,7 @@ function xepLoai(gpa) {
 /* ===== LOAD ===== */
 let currentPage = 1;
 let totalStudents = 0;
-let pageSize = 0; // 🔥 lấy từ backend
+let pageSize = 0; // lấy từ backend
 
 function loadStudents(page = 1) {
   fetch(`${API}?page=${page}`)
@@ -29,7 +29,7 @@ function loadStudents(page = 1) {
 
       currentPage = res.page;
       totalStudents = res.total;
-      pageSize = res.limit; // 🔥 backend quyết định
+      pageSize = res.limit; // backend quyết định
 
       renderPagination();
     })
