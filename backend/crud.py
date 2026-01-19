@@ -1,6 +1,6 @@
 import json
 from typing import List, Optional
-from models import Student
+from models.student import Student
 import random
 from datetime import datetime, timedelta
 
@@ -158,7 +158,6 @@ def get_student_by_mssv(mssv: str) -> Optional[dict]:
         if s.get("mssv") == mssv:
             return s
     return None
-
 
 def add_student(student: Student) -> bool:
     students = load_students()

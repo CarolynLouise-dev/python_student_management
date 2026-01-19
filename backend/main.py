@@ -1,8 +1,9 @@
 from fastapi import FastAPI, Query
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
+from database.database import get_db, seed_db
+from models.student import Student
 
-from models import Student
 import crud
 
 app = FastAPI(title="Student Management API")
@@ -15,6 +16,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+seed_db()
 
 # ===== TEST =====
 @app.get("/")
@@ -44,23 +47,23 @@ def get_student(mssv: str):
     return {"error": "Không tìm thấy sinh viên"}
 
 
-@app.post("/students")
-def create_student(student: Student):
-    if crud.add_student(student):
-        return {"message": "Thêm thành công"}
-    return {"error": "MSSV đã tồn tại"}
+# @app.post("/students")
+# def create_student(student: Student):
+#     if crud.add_student(student):
+#         return {"message": "Thêm thành công"}
+#     return {"error": "MSSV đã tồn tại"}
 
 
-@app.put("/students/{mssv}")
-def update_student(mssv: str, student: Student):
-    if crud.update_student(mssv, student):
-        return {"message": "Cập nhật thành công"}
-    return {"error": "Không tìm thấy sinh viên"}
-
-
-@app.delete("/students/{mssv}")
-def delete_student(mssv: str):
-    if crud.delete_student(mssv):
-        return {"message": "Xóa thành công"}
-    return {"error": "Không tìm thấy sinh viên"}
+# @app.put("/students/{mssv}")
+# def update_student(mssv: str, student: Student):
+#     if crud.update_student(mssv, student):
+#         return {"message": "Cập nhật thành công"}
+#     return {"error": "Không tìm thấy sinh viên"}
+#
+#
+# @app.delete("/students/{mssv}")
+# def delete_student(mssv: str):
+#     if crud.delete_student(mssv):
+#         return {"message": "Xóa thành công"}
+#     return {"error": "Không tìm thấy sinh viên"}
 
