@@ -1,61 +1,59 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 
 from models import Student
 import crud
-from crud import (
-    get_students_paginated,
-    get_student_by_mssv,
-    add_student,
-    update_student,
-    delete_student
-)
 
 app = FastAPI(title="Student Management API")
 
-# ===== CORS (để FE HTML gọi được) =====
+# ===== CORS =====
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # cho phép tất cả (dễ demo)
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ===== TEST =====
+# ===== ROOT =====
 @app.get("/")
 def root():
     return {"message": "API is running 🚀"}
 
-# ===== CRUD SINH VIÊN =====
 
+# ===== STUDENTS =====
 @app.get("/students")
 def get_students(
     page: int = Query(1, ge=1),
     limit: int = Query(15, ge=1),
     search: Optional[str] = None
 ):
-    result = get_students_paginated(page, limit, search)
+    result = crud.get_students_paginated(page, limit, search)
     return {
-        **result,      # data, total
+        **result,
         "page": page,
         "limit": limit
     }
 
+@app.get("/students/Allstudents")
+def get_all_students():
+    students = crud.get_all_students()
+    return students
+
 @app.get("/students/{mssv}")
 def get_student(mssv: str):
     student = crud.get_student_by_mssv(mssv)
-    if student:
-        return student
-    return {"error": "Không tìm thấy sinh viên"}
+    if not student:
+        raise HTTPException(status_code=404, detail="Không tìm thấy sinh viên")
+    return student
 
 
 @app.post("/students")
 def create_student(student: Student):
-    if crud.add_student(student):
-        return {"message": "Thêm thành công"}
-    return {"error": "MSSV đã tồn tại"}
+    if not crud.add_student(student):
+        raise HTTPException(status_code=400, detail="MSSV đã tồn tại")
+    return {"message": "Thêm thành công"}
 
 
 @app.put("/students/{mssv}")
@@ -67,7 +65,6 @@ def update_student(mssv: str, student: Student):
 
 @app.delete("/students/{mssv}")
 def delete_student(mssv: str):
-    if crud.delete_student(mssv):
-        return {"message": "Xóa thành công"}
-    return {"error": "Không tìm thấy sinh viên"}
-
+    if not crud.delete_student(mssv):
+        raise HTTPException(status_code=404, detail="Không tìm thấy sinh viên")
+    return {"message": "Xóa thành công"}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <title>Student Management</title>
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="css/style.css">
 
 </head>
 
@@ -12,19 +12,45 @@
   <h1>🎓 Quản lý sinh viên</h1>
 
   <!-- FORM -->
-  <form id="studentForm">
-    <input type="text" id="mssv" placeholder="MSSV *" required />
-    <input type="text" id="ho" placeholder="Họ" />
-    <input type="text" id="ten" placeholder="Tên" />
-    <input type="email" id="email" placeholder="Email" />
-    <input type="date" id="ngay_sinh" />
-    <input type="text" id="que_quan" placeholder="Quê quán" />
-    <input type="number" step="0.1" id="diem_toan" placeholder="Điểm Toán" />
-    <input type="number" step="0.1" id="diem_van" placeholder="Điểm Văn" />
-    <input type="number" step="0.1" id="diem_anh" placeholder="Điểm Anh" />
-    <button type="submit">💾 Lưu sinh viên</button>
-    <button type="button" onclick="resetForm()">❌ Hủy</button>
-  </form>
+<form id="studentForm">
+  <input type="text" id="mssv" placeholder="MSSV" required />
+  <input type="text" id="first_name" placeholder="Tên" required />
+  <input type="text" id="last_name" placeholder="Họ" required />
+  <input type="email" id="email" placeholder="Email" />
+
+  <select id="gender">
+    <option value="">Giới tính</option>
+    <option value="male">Nam</option>
+    <option value="female">Nữ</option>
+  </select>
+
+  <select id="part_time_job">
+    <option value="">Làm thêm?</option>
+    <option value="true">Có</option>
+    <option value="false">Không</option>
+  </select>
+
+  <input type="number" id="absence_days" placeholder="Số buổi nghỉ" />
+  <input type="number" id="weekly_self_study_hours" placeholder="Giờ tự học / tuần" />
+  <input type="text" id="career_aspiration" placeholder="Định hướng nghề nghiệp" />
+
+  <select id="extracurricular_activities">
+    <option value="">Hoạt động ngoại khóa?</option>
+    <option value="true">Có</option>
+    <option value="false">Không</option>
+  </select>
+
+  <input type="number" id="math_score" placeholder="Toán" />
+  <input type="number" id="history_score" placeholder="Sử" />
+  <input type="number" id="physics_score" placeholder="Lý" />
+  <input type="number" id="chemistry_score" placeholder="Hóa" />
+  <input type="number" id="biology_score" placeholder="Sinh" />
+  <input type="number" id="english_score" placeholder="Anh" />
+  <input type="number" id="geography_score" placeholder="Địa" />
+
+  <button type="submit">💾 Lưu</button>
+  <button type="button" onclick="resetForm()">🔄 Hủy</button>
+</form>
 
   <!-- SEARCH -->
 <input
@@ -33,31 +59,35 @@
   placeholder="🔍 Tìm theo MSSV hoặc tên..."
 />
 
+<button onclick="exportStudentsCSV()">📥 Xuất CSV</button>
 
 
   <!-- TABLE -->
-  <table>
+  <table id="studentTable">
     <thead>
-      <tr>
-        <th>MSSV</th>
-        <th>Họ</th>
-        <th>Tên</th>
-        <th>Email</th>
-        <th>Ngày sinh</th>
-        <th>Quê quán</th>
-        <th>Toán</th>
-        <th>Văn</th>
-        <th>Anh</th>
-        <th>GPA</th>
-        <th>Học lực</th>
-        <th>Hành động</th>
-      </tr>
+        <tr>
+            <th>MSSV</th>
+            <th>Họ </th>
+            <th>Tên</th>
+            <th>Toán</th>
+            <th>Sử</th>
+            <th>Lý</th>
+            <th>Hóa</th>
+            <th>Sinh</th>
+            <th>Anh</th>
+            <th>Địa</th>
+            <th>GPA</th>
+            <th>Xếp loại</th>
+            <th>Chi tiết</th>
+            <th>Hành động</th>
+        </tr>
     </thead>
-    <tbody id="studentTable"></tbody>
-  </table>
+    <tbody></tbody>
+</table>
   <div id="pagination" style="margin-top:15px; text-align:center;"></div>
 
 </div>
-<script type="text/javascript" src="/js/main.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+
 </body>
 </html>

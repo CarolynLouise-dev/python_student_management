@@ -90,13 +90,14 @@ pip install fastapi uvicorn pydantic pandas
 
 ### 2️⃣ Run Backend
 ```bash
-cd backend
+cd backend-html
 uvicorn main:app --reload
 ```
 
 ### 3️⃣ Run Frontend
-- Open the file `frontend-html/index.html`
-- Or use the Live Server extension in VS Code
+```bash
+-cd fontend-html
+- python3 -m http.server 5500
 ```
 
 ### Edit 7: Improve the "API Endpoints" section formatting
