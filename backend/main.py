@@ -4,13 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from models import Student
 import crud
-from crud import (
-    get_students_paginated,
-    get_student_by_mssv,
-    add_student,
-    update_student,
-    delete_student
-)
 
 app = FastAPI(title="Student Management API")
 
@@ -36,7 +29,7 @@ def get_students(
     limit: int = Query(15, ge=1),
     search: Optional[str] = None
 ):
-    result = get_students_paginated(page, limit, search)
+    result = crud.get_students_paginated(page, limit, search)
     return {
         **result,      # data, total
         "page": page,
