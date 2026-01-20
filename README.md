@@ -64,15 +64,23 @@ student-management/
 
 ```json
 {
-  "mssv": "SV001",
-  "ho": "Nguyen",
-  "ten": "Van A",
-  "email": "sva@gmail.com",
-  "ngay_sinh": "2003-01-01",
-  "que_quan": "Hà Nội",
-  "diem_toan": 8.5,
-  "diem_van": 7.5,
-  "diem_anh": 9.0
+        "mssv": "SV1",
+        "first_name": "Paul",
+        "last_name": "Casey",
+        "email": "paul.casey.1@gslingacademy.com",
+        "gender": "male",
+        "part_time_job": false,
+        "absence_days": 3,
+        "extracurricular_activities": false,
+        "weekly_self_study_hours": 27.0,
+        "career_aspiration": "Lawyer",
+        "math_score": 73,
+        "history_score": 81,
+        "physics_score": null,
+        "chemistry_score": 97,
+        "biology_score": null,
+        "english_score": 80,
+        "geography_score": 87
 }
 ```
 
@@ -90,13 +98,14 @@ pip install fastapi uvicorn pydantic pandas
 
 ### 2️⃣ Run Backend
 ```bash
-cd backend
+cd backend-html
 uvicorn main:app --reload
 ```
 
 ### 3️⃣ Run Frontend
-- Open the file `frontend-html/index.html`
-- Or use the Live Server extension in VS Code
+```bash
+-cd fontend-html
+- python3 -m http.server 5500
 ```
 
 ### Edit 7: Improve the "API Endpoints" section formatting
