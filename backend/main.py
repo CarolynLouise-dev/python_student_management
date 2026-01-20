@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 from database.database import get_db, seed_db
@@ -8,10 +8,10 @@ import crud
 
 app = FastAPI(title="Student Management API")
 
-# ===== CORS (để FE HTML gọi được) =====
+# ===== CORS =====
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # cho phép tất cả (dễ demo)
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -19,13 +19,13 @@ app.add_middleware(
 
 seed_db()
 
-# ===== TEST =====
+# ===== ROOT =====
 @app.get("/")
 def root():
     return {"message": "API is running 🚀"}
 
-# ===== CRUD SINH VIÊN =====
 
+# ===== STUDENTS =====
 @app.get("/students")
 def get_students(
     page: int = Query(1, ge=1),
@@ -34,18 +34,22 @@ def get_students(
 ):
     result = crud.get_students_paginated(page, limit, search)
     return {
-        **result,      # data, total
+        **result,
         "page": page,
         "limit": limit
     }
 
+@app.get("/students/Allstudents")
+def get_all_students():
+    students = crud.get_all_students()
+    return students
+
 @app.get("/students/{mssv}")
 def get_student(mssv: str):
     student = crud.get_student_by_mssv(mssv)
-    if student:
-        return student
-    return {"error": "Không tìm thấy sinh viên"}
-
+    if not student:
+        raise HTTPException(status_code=404, detail="Không tìm thấy sinh viên")
+    return student
 
 # @app.post("/students")
 # def create_student(student: Student):
@@ -66,4 +70,5 @@ def get_student(mssv: str):
 #     if crud.delete_student(mssv):
 #         return {"message": "Xóa thành công"}
 #     return {"error": "Không tìm thấy sinh viên"}
+
 
