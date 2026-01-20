@@ -16,6 +16,4 @@ def get_db():
     finally:
         db.close()
 
-def seed_db():
-    Base.metadata.create_all(engine)
-    # db = SessionLocal()
+

@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Query, HTTPException
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
-from database.database import get_db, seed_db
+from database.seed import seed_db
 from models.student import Student
 
 import crud
@@ -56,14 +56,12 @@ def get_student(mssv: str):
 #     if crud.add_student(student):
 #         return {"message": "Thêm thành công"}
 #     return {"error": "MSSV đã tồn tại"}
-
-
+#
 # @app.put("/students/{mssv}")
 # def update_student(mssv: str, student: Student):
 #     if crud.update_student(mssv, student):
 #         return {"message": "Cập nhật thành công"}
 #     return {"error": "Không tìm thấy sinh viên"}
-#
 #
 # @app.delete("/students/{mssv}")
 # def delete_student(mssv: str):

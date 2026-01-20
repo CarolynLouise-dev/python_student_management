@@ -4,7 +4,7 @@ from models.student import Student
 import random
 from datetime import datetime, timedelta
 
-DATA_FILE = "/Users/zhongde/Documents/Master Degree/FINAL PROJECT/backend/data/student-scores.json"
+DATA_FILE = "data/student-scores.json"
 
 
 # ===== FILE UTILS =====
@@ -15,8 +15,6 @@ def load_students():
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
-
-
 def save_students(students):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(students, f, ensure_ascii=False, indent=4)
@@ -25,7 +23,6 @@ def save_students(students):
 # ===== CRUD =====
 def get_all_students() -> List[dict]:
     return load_students()
-
 
 def get_student_by_mssv(mssv: str) -> Optional[dict]:
     for s in load_students():
@@ -43,7 +40,6 @@ def add_student(student: Student) -> bool:
     students.append(student.dict())
     save_students(students)
     return True
-
 
 def update_student(mssv: str, student: Student) -> bool:
     students = load_students()
@@ -83,14 +79,12 @@ def paginate_students(
         "limit": limit
     }
 
-
 def get_students_paginated(
     page: int = 1,
     limit: int = 15,
     search: Optional[str] = None
 ):
     students = load_students()
-
     # ===== SEARCH =====
     if search:
         keyword = search.strip().lower()
