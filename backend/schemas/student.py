@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from datetime import date
 
-class StudentCreate(BaseModel):
+class StudentUpdate(BaseModel):
     first_name: str | None = None
     last_name: str | None = None
     email: str | None = None
@@ -18,6 +18,8 @@ class StudentCreate(BaseModel):
     biology_score: int | None = None
     english_score: int | None = None
     geography_score: int | None = None
+class StudentCreate(StudentUpdate):
+    mssv: str
 
 class StudentGet(StudentCreate):
     id: int

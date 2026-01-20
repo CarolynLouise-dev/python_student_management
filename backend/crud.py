@@ -1,105 +1,138 @@
-import json
 from typing import List, Optional
 from models.student import Student
-import random
-from datetime import datetime, timedelta
-
-DATA_FILE = "data/student-scores.json"
-
-
-# ===== FILE UTILS =====
-def load_students():
-    try:
-        with open(DATA_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return []
-
-def save_students(students):
-    with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(students, f, ensure_ascii=False, indent=4)
+from sqlalchemy.orm import Session
+from schemas.student import StudentCreate, StudentUpdate
 
 
 # ===== CRUD =====
-def get_all_students() -> List[dict]:
-    return load_students()
+def get_all_students(db: Session) -> Optional[List[dict]]:
+    try:
+        students = db.query(Student).all()
+        return students
+    except Exception as e:
+        print(f"Error loading students: {e}")
+        return None
 
-def get_student_by_mssv(mssv: str) -> Optional[dict]:
-    for s in load_students():
-        if s.get("mssv") == mssv:
-            return s
-    return None
 
-def add_student(student: Student) -> bool:
-    students = load_students()
+def get_student_by_mssv(mssv: str, db: Session) -> Optional[dict]:
+    try:
+        student = db.query(Student).filter(Student.mssv == mssv).first()
+        if student:
+            return student
+        else:
+            return None
+    except Exception as e:
+        print(f"Error loading student: {e}")
+        return None
 
-    # kiểm tra trùng MSSV
-    if any(s.get("mssv") == student.mssv for s in students):
-        return False
 
-    students.append(student.dict())
-    save_students(students)
-    return True
-
-def update_student(mssv: str, student: Student) -> bool:
-    students = load_students()
-
-    for i, s in enumerate(students):
-        if s.get("mssv") == mssv:
-            students[i] = student.dict()
-            save_students(students)
-            return True
-
-    return False
-
-def delete_student(mssv: str) -> bool:
-    students = load_students()
-    new_students = [s for s in students if s.get("mssv") != mssv]
-
-    if len(new_students) == len(students):
-        return False
-
-    save_students(new_students)
-    return True
-
-def paginate_students(
-    students: List[dict],
-    page: int = 1,
-    limit: int = 15
-):
-    total = len(students)
-
-    start = (page - 1) * limit
-    end = start + limit
-
-    return {
-        "data": students[start:end],
-        "total": total,
-        "page": page,
-        "limit": limit
+def add_student(student: StudentCreate, db: Session) -> dict:
+    # status: success, conflict, error
+    result = {
+        "message": None,
+        "status": "success",
+        "error": None
     }
+    try:
+        exist = db.query(Student).filter(Student.mssv == student.mssv).first()
+        if exist:
+            result['status'] = 'conflict'
+            result['error'] = "MSSV đã tồn tại"
+        else:
+            new_student = Student(**student.model_dump())
+            db.add(new_student)
+            db.commit()
+            result['message'] = "Thêm thành công"
+        return result
+    except Exception as e:
+        print(f"Error adding student: {e}")
+        result['status'] = 'error'
+        result['error'] = "Xảy ra lỗi khi thêm student"
+        return result
 
-def get_students_paginated(
-    page: int = 1,
-    limit: int = 15,
-    search: Optional[str] = None
-):
-    students = load_students()
-    # ===== SEARCH =====
-    if search:
-        keyword = search.strip().lower()
-        students = [
-            s for s in students
-            if keyword in s.get("mssv", "").lower()
-            or keyword in s.get("ten", "").lower()
-        ]
 
-    total = len(students)
-
-    start = (page - 1) * limit
-    end = start + limit
-
-    return {
-        "data": students[start:end],
-        "total": total
+def update_student(mssv: str, student: StudentUpdate, db: Session) -> dict:
+    # status: success, notfound, error
+    result = {
+        "message": None,
+        "status": "success",
+        "error": None
     }
+    try:
+        exist = db.query(Student).filter(Student.mssv == mssv).first()
+        if exist:
+            # Cập nhật từng field từ schema vào instance hiện có
+            update_data = student.model_dump(exclude_unset=True)
+            for field, value in update_data.items():
+                # Chỉ gán những field thực sự tồn tại trên model
+                if hasattr(exist, field):
+                    setattr(exist, field, value)
+
+            db.commit()
+            db.refresh(exist)
+            result['message'] = "Cập nhật thành công"
+            return result
+        else:
+            result['error'] = "Không tìm thấy sinh viên"
+            result['status'] = 'notfound'
+            return result
+    except Exception as e:
+        print(f"Error updating student: {e}")
+        result['status'] = 'error'
+        result['message'] = "Xảy ra lỗi khi sửa thông tin student"
+        return result
+
+
+def delete_student(mssv: str, db: Session) -> dict:
+    # status: success, notfound, error
+    result = {
+        "message": None,
+        "status": "success",
+        "error": None
+    }
+    try:
+        exist = db.query(Student).filter(Student.mssv == mssv).first()
+        if exist:
+            db.delete(exist)
+            db.commit()
+            result['message'] = "Xóa thành công"
+            return result
+        else:
+            result['error'] = "Không tìm thấy sinh viên"
+            result['status'] = 'notfound'
+            return result
+    except Exception as e:
+        print(f"Error deleting student: {e}")
+        result['status'] = 'error'
+        result['message'] = "Xảy ra lỗi khi xóa student"
+        return result
+
+
+def get_students_paginated(page: int = 1, limit: int = 15, search: Optional[str] = None, db: Session = None) -> dict:
+    # status: success, error
+    result = {
+        "status": "success",
+        "total": 0,
+        "data": []
+    }
+    try:
+        # lấy danh sách sinh viên phân trang có search tên hoặc mssv
+        if search:
+            all_students = db.query(Student).filter(
+                    Student.mssv.like(f"%{search.strip()}%")|
+                    Student.first_name.like(f"%{search.strip()}%")|
+                    Student.last_name.like(f"%{search.strip()}%")
+            )
+            total = all_students.count()
+            students = all_students.offset((page - 1) * limit).limit(limit).all()
+        else:
+            all_students = db.query(Student)
+            total = all_students.count()
+            students = all_students.offset((page - 1) * limit).limit(limit).all()
+        result['total'] = total
+        result['data'] = students
+        return result
+    except Exception as e:
+        print(f"Error paginating students: {e}")
+        result['status'] = 'error'
+        return result
